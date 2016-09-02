@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <fstream>
 #include <ctime>
+#include <sys/time.h>
 #include "opencv2/opencv.hpp"
 
 using namespace std;
@@ -25,10 +27,16 @@ int main()
     bool stop(false);
     Mat frame;
     int num = 0;
-    time_t begin = time(0);
+    timeval begin;
+    gettimeofday(&begin, 0);
+    ofstream CatchTime;
+    CatchTime.open("CatchTime.txt");
     ostringstream ss;
-    ss << num ;
+
+    ss << num;
     string imageName = StorePath + ss.str() + ".png";
+    CatchTime <<  "corridor-" << ss.str() << ".png" <<  " " << begin.tv_sec << "." << begin.tv_usec << endl;
+
     ss.str("");
     ss.clear();
     namedWindow("images");
@@ -45,17 +53,23 @@ int main()
 	num++;
 	if(num > NumofImages)
 	    break;
-    time_t now = time(0);
+	timeval now;
+	gettimeofday(&now, 0);
+
 	ss << num ;
 	imageName = StorePath + ss.str() + ".png";
+	CatchTime << "corridor-" << ss.str() << ".png"  << " " << now.tv_sec << "." << now.tv_usec << endl;
+
 	ss.str("");
 	ss.clear();
-	cout << imageName << endl;
+	cout << "the " << num << " image" << endl;
 
 	waitKey(20);
 
     }
     cap.release();
+    CatchTime.close();
+    
     return 0;
 }
 
