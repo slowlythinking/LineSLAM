@@ -4,12 +4,13 @@
 #include <thread>
 #include <unistd.h>
 #include<algorithm>
+#include "LineSLAMSystem.h"
 #include <opencv2/opencv.hpp>
 
 using namespace std;
 using namespace cv;
 
-const int ProcessingImagesNum = 50;
+const int ProcessingImagesNum = 500;
 
 void LoadImages(const string &strFile, vector<string> &vstrImageFilenames,
                 vector<double> &vTimestamps);
@@ -33,6 +34,8 @@ int main(int argc, char **argv)
     cout << "LoadImages done." << endl;
 
     int nImages = vstrImageFilenames.size();
+
+    LineSLAM::LineSLAMSystem SLAM(1);
 
     // Vector for tracking time statistics
     vector<double> vTimesTrack;
@@ -65,6 +68,7 @@ int main(int argc, char **argv)
 
 	// Pass the image to the SLAM system
 	cout << "now I'm pretended to process the " << ni << "th image:)" << endl;
+	SLAM.InputImage(im,tframe);
 
 
 
