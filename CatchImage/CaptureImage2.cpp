@@ -64,7 +64,7 @@ int main()
 	ss.clear();
 	cout << "the " << num << " image" << endl;
 
-	waitKey(20);
+	waitKey();
 
     }
     cap.release();
