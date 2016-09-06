@@ -28,12 +28,14 @@ int main(int argc, char **argv)
 
     vector<string> vstrImageFilenames;
     vector<double> vTimestamps;
-    string strFile = "/home/weixinyu/LearnAndWork/gaoyanyuan/ORB_SLAM/MySLAM/CatchTime.txt"; 
+    string strFile = "/home/weixinyu/LearnAndWork/gaoyanyuan/ORB_SLAM/MySLAM/CatchTimePGM.txt"; 
     cout << "the String strFile is: " << strFile << endl << "Begin to loadImages." << endl;
     LoadImages(strFile, vstrImageFilenames, vTimestamps);
     cout << "LoadImages done." << endl;
 
     int nImages = vstrImageFilenames.size();
+    int ImageNumInTrue;
+    ProcessingImagesNum >= nImages ? ImageNumInTrue = nImages : ImageNumInTrue = ProcessingImagesNum;
 
     LineSLAM::LineSLAMSystem SLAM(1);
 
@@ -49,26 +51,33 @@ int main(int argc, char **argv)
 
     // Main loop
     cv::Mat im;
-    for(int ni=0; ni<nImages && ni < ProcessingImagesNum; ni++)
+    for(int ni=0; ni<ImageNumInTrue; ni++)
     {
 	// Read image from file
 
-	//	im = imread(string(argv[3])+"/"+vstrImageFilenames[ni],CV_LOAD_IMAGE_UNCHANGED);
-	im = imread("./mydata/"+vstrImageFilenames[ni],CV_LOAD_IMAGE_COLOR);
 	double tframe = vTimestamps[ni];
-
-	if(im.empty())
-	{
-	    cerr << endl << "Failed to load image at: "
-		<< "./mydata/" << vstrImageFilenames[ni] << endl;
-	    return 1;
-	}
+	//	im = imread(string(argv[3])+"/"+vstrImageFilenames[ni],CV_LOAD_IMAGE_UNCHANGED);
+	//read png
+	string temp = "./mydataPGM/"+vstrImageFilenames[ni]; 
+//	//read pgm
+////	im = imread("./mydataPGM/"+vstrImageFilenames[ni],IMREAD_GRAYSCALE);
+////	cout << "vstrImageFilenames[ni]: "  << vstrImageFilenames[ni] << endl;
+//
+//	im = imread(temp,CV_LOAD_IMAGE_COLOR);
+//	if(im.empty())
+//	{
+//	    cerr << endl << "Failed to load image at: "
+//		<< "./mydataPGM/" << vstrImageFilenames[ni] << endl;
+//	    return 1;
+//	}
 
 	chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
 
 	// Pass the image to the SLAM system
 	cout << "now I'm pretended to process the " << ni << "th image:)" << endl;
-	SLAM.InputImage(im,tframe);
+//	SLAM.InputImageLSD(im,tframe);
+
+	SLAM.InputImageEDL(temp);
 
 
 
@@ -99,8 +108,8 @@ int main(int argc, char **argv)
 	totaltime+=vTimesTrack[ni];
     }
     cout << "-------" << endl << endl;
-    cout << "median tracking time(milliseconds): " << vTimesTrack[nImages/2]*1e3 << endl;
-    cout << "mean tracking time(milliseconds): " << (totaltime/nImages)*1e3 << endl;
+    cout << "median tracking time(milliseconds): " << vTimesTrack[ImageNumInTrue/2]*1e3 << endl;
+    cout << "mean tracking time(milliseconds): " << (totaltime/ImageNumInTrue)*1e3 << endl;
 
 
     return 0;
@@ -128,6 +137,7 @@ void LoadImages(const string &strFile, vector<string> &vstrImageFilenames, vecto
             vTimestamps.push_back(t);
                }
     }
+    f.close();
 }
 
 
