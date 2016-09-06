@@ -87,7 +87,7 @@ int main(int argc, char **argv)
 
 	if(ttrack<T)
 	    usleep((T-ttrack)*1e6);
-	cout << "I pretended to be busy and I must sleep for " << (T-ttrack)*1e3 << " milliseconds for waiting next image. You know I've take " << ttrack*1e3 << " milliseconds for processing this fucking image." << endl << endl;
+	cout << "I pretended to be busy and I must sleep for " << (T-ttrack)*1e3 << " milliseconds for waiting next image. You know I've take " << ttrack*1e3 << " milliseconds for processing this image." << endl << endl;
 
 
     }
