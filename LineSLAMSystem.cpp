@@ -4,7 +4,9 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/highgui.hpp>
+#include <thread>
 #include <iostream>
+#include "Timer.h"
 
 using namespace cv;
 using namespace cv::line_descriptor;
@@ -15,9 +17,10 @@ using namespace std;
 namespace LineSLAM
 {
 
-    LineSLAMSystem::LineSLAMSystem(int i)
+    LineSLAMSystem::LineSLAMSystem(int i,  Drawer *ttFrameDrawer)
     {
 	EDLine = new EDLineDetect(1);
+	tFrameDrawer(ttFrameDrawer);
 
     }
 
@@ -33,6 +36,7 @@ namespace LineSLAM
 	    return;
 	}
 
+	currentImg = im.clone();
 	/* create a random binary mask */
 	cv::Mat mask = Mat::ones( im.size(), CV_8UC1 );
 
@@ -41,10 +45,13 @@ namespace LineSLAM
 
 	/* create a structure to store extracted lines */
 	vector<KeyLine> lines;
+	Timer timer;
+	timer.Start();
 
 	/* extract lines */
 	bd->detect( im, lines, 2, 1, mask );
-	cout << "detected lines number is: " << lines.size() << endl;
+	timer.Stop();
+	cout << "detected " << lines.size() << "line segments in " << timer.ElapsedTime() << " ms" << endl;
 
 	/* draw lines extracted from octave 0 */
 
@@ -71,22 +78,23 @@ namespace LineSLAM
 
     void LineSLAMSystem::InputImageEDL(string file)
     {
-	int lineNum = 0;
-	LS *lines = EDLine->DetectEDLines(file,&lineNum);
-	Mat output = imread(file,CV_LOAD_IMAGE_COLOR);
-      cout << "detected lines number is: " << lineNum << endl;
-	for (int i=0; i<lineNum; i++)
-	{
-	    Point pt1 = Point2f(lines[i].sx, lines[i].sy);
-	    Point pt2 = Point2f(lines[i].ex, lines[i].ey);
-	    /* draw line */
-	    //	line( output, pt1, pt2, Scalar( B, G, R ), 3 );
-	    line( output, pt1, pt2, Scalar( 255, 0, 0 ), 1 );
-
-
-	} //end-for
-	imshow( "LSD lines", output );
-	waitKey();
+	currentLineNum = 0;
+	currentLines = EDLine->DetectEDLines(file,&currentLineNum);
+      cout << "detected lines number is: " << currentLineNum << endl;
+      currentImg = imread(file,CV_LOAD_IMAGE_COLOR);
+      tFrameDrawer->updateDrawer(this);
+//	for (int i=0; i<lineNum; i++)
+//	{
+//	    Point pt1 = Point2f(lines[i].sx, lines[i].sy);
+//	    Point pt2 = Point2f(lines[i].ex, lines[i].ey);
+//	    /* draw line */
+//	    //	line( output, pt1, pt2, Scalar( B, G, R ), 3 );
+//	    line( output, pt1, pt2, Scalar( 255, 0, 0 ), 1 );
+//
+//
+//	} //end-for
+//	imshow( "LSD lines", output );
+//	waitKey();
     }
 
 

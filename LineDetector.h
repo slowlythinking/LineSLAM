@@ -1,9 +1,11 @@
+#ifndef _LINEDETECTOR_H_
+#define _LINEDETECTOR_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
 #include <iostream>
 #include "Timer.h"
-#include "LS.h"
 
 using namespace std;
 
@@ -22,3 +24,4 @@ public:
 };
 }
 
+#endif

@@ -59,10 +59,10 @@ int main(int argc, char **argv)
 	//	im = imread(string(argv[3])+"/"+vstrImageFilenames[ni],CV_LOAD_IMAGE_UNCHANGED);
 	//read png
 	string temp = "./mydataPGM/"+vstrImageFilenames[ni]; 
-//	//read pgm
-////	im = imread("./mydataPGM/"+vstrImageFilenames[ni],IMREAD_GRAYSCALE);
-////	cout << "vstrImageFilenames[ni]: "  << vstrImageFilenames[ni] << endl;
-//
+	//read pgm
+//	im = imread("./mydataPGM/"+vstrImageFilenames[ni],IMREAD_GRAYSCALE);
+//	cout << "vstrImageFilenames[ni]: "  << vstrImageFilenames[ni] << endl;
+
 //	im = imread(temp,CV_LOAD_IMAGE_COLOR);
 //	if(im.empty())
 //	{
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 //		<< "./mydataPGM/" << vstrImageFilenames[ni] << endl;
 //	    return 1;
 //	}
-
+//
 	chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
 
 	// Pass the image to the SLAM system
