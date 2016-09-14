@@ -2,6 +2,7 @@
 #include <fstream>
 #include <chrono>
 #include <thread>
+#include <string>
 #include <unistd.h>
 #include<algorithm>
 #include "LineSLAMSystem.h"
@@ -10,25 +11,25 @@
 using namespace std;
 using namespace cv;
 
-const int ProcessingImagesNum = 500;
+const int ProcessingImagesNum = 1000;
 
 void LoadImages(const string &strFile, vector<string> &vstrImageFilenames,
                 vector<double> &vTimestamps);
 
 int main(int argc, char **argv)
 {
-    //    if(argc != 1)
-    //    {
-    //	cout << "please input the path to sequence" << endl;
-    //	return 1;
-    //    }
-
-    //    string strFile = string(argv[1]);
-    //    string strFile = "/home/weixinyu/LearnAndWork/gaoyanyuan/ORB_SLAM/ORB_SLAM2/Examples/Monocular/rgbd_dataset_freiburg2_large_with_loop/rgb.txt"; 
+    if(argc != 2)
+    {
+	cout << "please choose a method to detect line!" << endl;
+	cout << "0: LSD" << endl << "1:EDLine" << endl;
+	return 1;
+    }
+    int LineDetectMethod = stoi(string(argv[1]));
 
     vector<string> vstrImageFilenames;
     vector<double> vTimestamps;
-    string strFile = "/home/weixinyu/LearnAndWork/gaoyanyuan/ORB_SLAM/MySLAM/CatchTimePGM.txt"; 
+//  string strFile = "/home/weixinyu/LearnAndWork/gaoyanyuan/ORB_SLAM/MySLAM/CatchTimePGM.txt"; 
+    string strFile = "/home/weixinyu/LearnAndWork/gaoyanyuan/ORB_SLAM/ORB_SLAM2/Examples/Monocular/rgbd_dataset_freiburg2_large_with_loop/LineRGB.txt"; 
     cout << "the String strFile is: " << strFile << endl << "Begin to loadImages." << endl;
     LoadImages(strFile, vstrImageFilenames, vTimestamps);
     cout << "LoadImages done." << endl;
@@ -41,7 +42,9 @@ int main(int argc, char **argv)
 
     // Vector for tracking time statistics
     vector<double> vTimesTrack;
-    vTimesTrack.resize(nImages);
+    vector<int> vLinesNum;
+    vTimesTrack.resize(ImageNumInTrue);
+    vLinesNum.resize(ImageNumInTrue);
 
     cout << endl << "-------" << endl;
     cout << "Start processing sequence ..." << endl;
@@ -57,27 +60,38 @@ int main(int argc, char **argv)
 
 	double tframe = vTimestamps[ni];
 	//	im = imread(string(argv[3])+"/"+vstrImageFilenames[ni],CV_LOAD_IMAGE_UNCHANGED);
+
 	//read png
-	string temp = "./mydataPGM/"+vstrImageFilenames[ni]; 
+//	string temp = "./mydataPGM/"+vstrImageFilenames[ni]; 
+	string temp = "/home/weixinyu/LearnAndWork/gaoyanyuan/ORB_SLAM/ORB_SLAM2/Examples/Monocular/rgbd_dataset_freiburg2_large_with_loop/"+vstrImageFilenames[ni]; 
+
 	//read pgm
 //	im = imread("./mydataPGM/"+vstrImageFilenames[ni],IMREAD_GRAYSCALE);
 //	cout << "vstrImageFilenames[ni]: "  << vstrImageFilenames[ni] << endl;
 
 //	im = imread(temp,CV_LOAD_IMAGE_COLOR);
-//	if(im.empty())
-//	{
-//	    cerr << endl << "Failed to load image at: "
-//		<< "./mydataPGM/" << vstrImageFilenames[ni] << endl;
-//	    return 1;
-//	}
-//
+	im = imread(temp,CV_8UC1);
+	if(im.empty())
+	{
+	    cerr << endl << "Failed to load image at: "
+		<< "./mydataPGM/" << vstrImageFilenames[ni] << endl;
+	    return 1;
+	}
+
 	chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
 
 	// Pass the image to the SLAM system
 	cout << "now I'm pretended to process the " << ni << "th image:)" << endl;
-//	SLAM.InputImageLSD(im,tframe);
-
-	SLAM.InputImageEDL(temp);
+	if(LineDetectMethod == 0)
+	    vLinesNum[ni] = SLAM.InputImageLSD(im,tframe);
+	else if(LineDetectMethod == 1)
+	    vLinesNum[ni] = SLAM.InputImageEDL(im,tframe);
+	else
+	{
+	    cout << "please choose a method to detect line!" << endl;
+	    cout << "0: LSD" << endl << "1:EDLine" << endl;
+	    return 0;
+	}
 
 
 
@@ -89,7 +103,7 @@ int main(int argc, char **argv)
 
 	// Wait to load the next frame
 	double T=0;
-	if(ni<nImages-1)
+	if(ni<ImageNumInTrue-1)
 	    T = vTimestamps[ni+1]-tframe;
 	else if(ni>0)
 	    T = tframe-vTimestamps[ni-1];
@@ -102,14 +116,21 @@ int main(int argc, char **argv)
     }
     // Tracking time statistics
     sort(vTimesTrack.begin(),vTimesTrack.end());
+    sort(vLinesNum.begin(),vLinesNum.end());
     double totaltime = 0;
-    for(int ni=0; ni<nImages; ni++)
+    unsigned long long totalline = 0;
+    for(int ni=0; ni<ImageNumInTrue; ni++)
     {
-	totaltime+=vTimesTrack[ni];
+	totaltime += vTimesTrack[ni];
+	totalline += vLinesNum[ni];
     }
     cout << "-------" << endl << endl;
+    cout << "total processing time is: " << totaltime*1e3 << endl;
     cout << "median tracking time(milliseconds): " << vTimesTrack[ImageNumInTrue/2]*1e3 << endl;
-    cout << "mean tracking time(milliseconds): " << (totaltime/ImageNumInTrue)*1e3 << endl;
+    cout << "mean tracking time(milliseconds): " << (totaltime/ImageNumInTrue)*1e3 << endl << endl;
+    cout << "total line num is: " << totalline << endl;
+    cout << "median detecting line number: " << vLinesNum[ImageNumInTrue/2] << endl;
+    cout << "mean detecting line number: " << (totalline/ImageNumInTrue) << endl;
 
 
     return 0;
@@ -129,12 +150,12 @@ void LoadImages(const string &strFile, vector<string> &vstrImageFilenames, vecto
             ss << s;
             double t;
 	    string sRGB;
-	    ss >> sRGB;
 //	    cout << "sRGB is: " << sRGB << endl;
-	    vstrImageFilenames.push_back(sRGB);
 	    ss >> t;
-//	    cout << "the double time is: " << t << endl << endl;
             vTimestamps.push_back(t);
+	    ss >> sRGB;
+	    vstrImageFilenames.push_back(sRGB);
+//	    cout << "the double time is: " << t << endl << endl;
                }
     }
     f.close();

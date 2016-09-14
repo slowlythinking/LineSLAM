@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
-
+#include "LS.h"
 #include "LineDetector.h"
 
 using namespace std;

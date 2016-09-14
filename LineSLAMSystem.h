@@ -1,36 +1,36 @@
+#ifndef _LINESLAMSYSTEM_H_
+#define _LINESLAMSYSTEM_H_
+
 #include <opencv2/opencv.hpp>
-#include "LineDetector.h"
+#include <thread>
+#include "Viewer.h"
+#include "Drawer.h"
+#include "LineTracking.h"
 #include "LS.h"
+#include "Timer.h"
+
+
 
 namespace LineSLAM
 {
 
 class LineSLAMSystem
 {
-    private:
-	EDLineDetect* EDLine;
     public:
-	cv::Mat currentImg;
-	LS *currentLines;
-	int currentLineNum;
+	LineSLAMSystem(int i);
 
-	LineSLAMSystem(int i, Drawer *ttFrameDrawer);
-
-	void InputImageLSD(const cv::Mat &im, const double &timestamp);
-	void InputImageEDL(std::string file);
-    protected:
-	Drawer* tFrameDrawer;
+	int InputImageLSD(const cv::Mat &im, const double &timestamp);
+	int InputImageEDL(const cv::Mat &im, const double &timestamp);
+	
+	private:
+	LineTracking* SyLineTracker;
+	Drawer* SyDrawer;
+	Viewer* SyViewer;
+	std::thread* mptViewer;
 
 };
 
 
-
-
-
-
-
-
-
-
-
 }
+
+#endif

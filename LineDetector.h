@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include "Timer.h"
+#include "LS.h"
 
 using namespace std;
 

@@ -13,7 +13,8 @@ int main()
 {
     vector<string> vstrImageFilenames;
     vector<double> vTimestamps;
-    string strFile = "/home/weixinyu/LearnAndWork/gaoyanyuan/ORB_SLAM/MySLAM/CatchTime.txt"; 
+//  string strFile = "/home/weixinyu/LearnAndWork/gaoyanyuan/ORB_SLAM/MySLAM/CatchTime.txt";
+    string strFile = "/home/weixinyu/LearnAndWork/gaoyanyuan/ORB_SLAM/ORB_SLAM2/Examples/Monocular/rgbd_dataset_freiburg2_large_with_loop/rgb.txt";
     cout << "the String strFile is: " << strFile << endl << "Begin to loadImages." << endl;
     LoadImages(strFile, vstrImageFilenames, vTimestamps);
     cout << "LoadImages done." << endl;
@@ -56,9 +57,16 @@ int main()
 void LoadImages(const string &strFile, vector<string> &vstrImageFilenames, vector<double> &vTimestamps)
 {
     ofstream CatchTimePGM;
-    CatchTimePGM.open("../CatchTimePGM.txt");
+//  CatchTimePGM.open("../CatchTimePGM.txt");
+    CatchTimePGM.open("../TUMPGM.txt");
     ifstream f;
     f.open(strFile.c_str());
+    
+    string s0;
+    getline(f,s0);
+    getline(f,s0);
+    getline(f,s0);
+    
     int i = 0;
     while(!f.eof())
     {
