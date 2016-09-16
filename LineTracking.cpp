@@ -14,7 +14,6 @@ namespace LineSLAM
 	tFrameDrawer(ttFrameDrawer)
 
     {
-	EDLine = new EDLineDetect(1);
 	currentImg = Mat(480,640,CV_8UC3, cv::Scalar(0,0,0));
 	currentLineNum = 0;
 	currentLines = nullptr;
@@ -22,38 +21,18 @@ namespace LineSLAM
     }
 
 
-    int LineTracking::TrackInputImageLSD(const cv::Mat &im, const double &timestamp)
+    void LineTracking::TrackInputImageLSD(const cv::Mat &im)
     {
-	methods = 1;
-
-	//	cv::imshow("images",im);
-	//	cv::waitKey(1);
-	if( im.data == NULL )
-	{
-	    std::cout << "Error, image could not be loaded. Please, check its path" << std::endl;
-	    return 1;
-	}
-
-	currentImg = im.clone();
 	/* create a random binary mask */
-	cv::Mat mask = Mat::ones( im.size(), CV_8UC1 );
+	cv::Mat mask = Mat::ones(im.size(), CV_8UC1 );
 
 	/* create a pointer to a BinaryDescriptor object with deafult parameters */
 	Ptr<LSDDetector> bd = LSDDetector::createLSDDetector();
 
-	/* create a structure to store extracted lines */
-//	vector<KeyLine> lines;
-	Timer timer;
-	timer.Start();
-
 	/* extract lines */
-	bd->detect( im, lines, 2, 1, mask );
-	timer.Stop();
+	bd->detect(im, lines, 2, 1, mask );
 	currentLineNum = lines.size();
-	cout << "detected " << lines.size() << "line segments in " << timer.ElapsedTime() << " ms" << endl;
-      tFrameDrawer->updateDrawer(this);
-      lines.clear();
-      return currentLineNum;
+//	lines.clear();
 
 	/* draw lines extracted from octave 0 */
 
@@ -79,11 +58,8 @@ namespace LineSLAM
     }
 
 
-    int LineTracking::TrackInputImageEDL(const cv::Mat& im_uchar, const double &timestamp)
+    void LineTracking::TrackInputImageEDL(const cv::Mat& im_uchar)
     {
-//	currentLineNum = 0;
-	currentImg = im_uchar.clone();
-
 	if (im_uchar.type() != CV_8UC1) 
 	{
 	    cerr<<"error: callEDLines requires uchar image type\n";
@@ -104,10 +80,7 @@ namespace LineSLAM
 	currentLines = DetectLinesByED(srcImg, im_uchar.cols, im_uchar.rows,&temp);
 	currentLineNum = temp;
 	delete[] srcImg;
-      cout << "detected lines number is: " << currentLineNum << endl;
 
-	tFrameDrawer->updateDrawer(this);
-      return currentLineNum;
     }
 
 //    void LineTracking::TrackInputImageEDL(const cv::Mat &im, const double &timestamp)
@@ -132,13 +105,37 @@ namespace LineSLAM
 ////	waitKey();
 //    }
 
+    int LineTracking::Tracking(const cv::Mat &im, const double &timestamp, int detectMethod)
+    {
+	if( im.data == NULL )
+	{
+	    std::cout << "Error, image could not be loaded. Please, check its path" << std::endl;
+	    return 1;
+	}
+	currentImg = im.clone();
+	methods = detectMethod;
 
+	//detect line
+	Timer timer;
+	timer.Start();
+	if(detectMethod == 0)
+	    TrackInputImageLSD(currentImg);
+	else if(detectMethod == 1)
+	    TrackInputImageEDL(currentImg);
+	else
+	{
+	    cout << "wrong method parameter!" << endl;
+	    return 1;
+	}
+	timer.Stop();
+	cout << "detected " << currentLineNum << "line segments in " << timer.ElapsedTime() << " ms" << endl;
 
+	//update framedrawer data
+	tFrameDrawer->updateDrawer(this);
+	lines.clear();
 
-
-
-
-
+	return currentLineNum;
+    }
 
 
 

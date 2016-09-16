@@ -11,11 +11,15 @@ namespace LineSLAM
     void Viewer::Run()
     {
 	cv::namedWindow("LineSLAM: Current Frame");
+	std::cout << "start view thread!" << std::endl;
 	while(1)
 	{
 	    cv::Mat im = vDrawer->Draw();
-	    cv::imshow("LineSLAM: Current Frame",im);
-	    cv::waitKey(10);
+	    if(!im.empty())
+	    {
+		cv::imshow("LineSLAM: Current Frame",im);
+		cv::waitKey(40);
+	    }
 	}
     }
 }

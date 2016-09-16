@@ -17,7 +17,9 @@ namespace LineSLAM
     Mat Drawer::Draw()
     {
 	unique_lock<mutex> lock(mMutex);
-	if(MethodForLineDetect == 0)
+
+	//use EDLine
+	if(MethodForLineDetect == 1)
 	{
 	    for (int i=0; i<tlineNum; i++)
 	    {
@@ -25,51 +27,56 @@ namespace LineSLAM
 		Point pt2 = Point2f(tCurrentLine[i].ex, tCurrentLine[i].ey);
 		/* draw line */
 		//	line( output, pt1, pt2, Scalar( B, G, R ), 3 );
-		line( drawMat, pt1, pt2, Scalar( 255, 0, 0 ), 1 );
+		cv::line( drawMat, pt1, pt2, Scalar( 255, 0, 0 ), 1 );
+		//	cout << "what's the problem!" << endl;
 	    } //end-for
 	}
-	else if(MethodForLineDetect == 1)
-	{
-	    for ( size_t i = 0; i < dlines.size(); i++ )
-	    {
-		KeyLine kl = dlines[i];
-		/* get extremes of line */
-		Point pt1 = Point2f( kl.startPointX, kl.startPointY );
-		Point pt2 = Point2f( kl.endPointX, kl.endPointY );
 
-		/* draw line */
-		//	line( output, pt1, pt2, Scalar( B, G, R ), 3 );
-		line( drawMat, pt1, pt2, Scalar( 255, 0, 0 ), 1 );
+	//use LSD 
+	else if(MethodForLineDetect == 0)
+	{
+	    for ( int i = 0; i < tlineNum; i++)
+	    {
+	        KeyLine kl = dlines[i];
+	        /* get extremes of line */
+              Point pt1 = Point2f( kl.startPointX, kl.startPointY );
+              Point pt2 = Point2f( kl.endPointX, kl.endPointY );
+
+	        /* draw line */
+	        //	line( output, pt1, pt2, Scalar( B, G, R ), 3 );
+		cv::line( drawMat, pt1, pt2, Scalar( 255, 0, 0 ), 1 );
 
 	    }
 
 	}
+	else
+	    cout << "don't choose right line detector!" << endl;
 	return drawMat;
     }
 
     void Drawer::updateDrawer(LineTracking *tLineTracking)
     {
 	unique_lock<mutex> lock(mMutex);
-	//	{
-	//      unique_lock<mutex> lock(mMutex);
+
 	MethodForLineDetect = tLineTracking->methods;
 	int tLineNum = tLineTracking->currentLineNum;
 	cout << "更新Drawer！！！！！！！！！线段数目为：" << tLineNum << endl;
 	if(tLineNum > 0)
 	{
-	    if(MethodForLineDetect == 0)
+	    if(MethodForLineDetect == 1)
 	    {
 		drawMat = tLineTracking->currentImg;
 		tlineNum = tLineTracking->currentLineNum;
 		tCurrentLine = tLineTracking->currentLines;
 	    }
-	    else if(MethodForLineDetect == 1)
+	    else if(MethodForLineDetect == 0)
 	    {
 		drawMat = tLineTracking->currentImg;
 		tlineNum = tLineTracking->currentLineNum;
 		dlines = tLineTracking->lines;
 	    }
+	    else
+		cout << "don't choose right line detector!" << endl;
 	}
-	//	}
     }
 }

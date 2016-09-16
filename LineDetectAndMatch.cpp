@@ -70,6 +70,7 @@ int main(int argc, char **argv)
 //	cout << "vstrImageFilenames[ni]: "  << vstrImageFilenames[ni] << endl;
 
 //	im = imread(temp,CV_LOAD_IMAGE_COLOR);
+
 	im = imread(temp,CV_8UC1);
 	if(im.empty())
 	{
