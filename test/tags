@@ -1,0 +1,117 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Draw	Drawer.cpp	/^    Mat Drawer::Draw()$/;"	f	class:LineSLAM::Drawer
+Drawer	Drawer.cpp	/^    Drawer::Drawer(int i)$/;"	f	class:LineSLAM::Drawer
+Drawer	Drawer.h	/^    class Drawer$/;"	c	namespace:LineSLAM
+ElapsedTime	Timer.h	/^  double ElapsedTime(){$/;"	f	class:Timer
+InputImageEDL	LineSLAMSystem.cpp	/^    int LineSLAMSystem::InputImageEDL(const cv:: Mat &im, const double &timestamp)$/;"	f	class:LineSLAM::LineSLAMSystem
+InputImageLSD	LineSLAMSystem.cpp	/^    int LineSLAMSystem::InputImageLSD(const cv::Mat &im, const double &timestamp)$/;"	f	class:LineSLAM::LineSLAMSystem
+LS	LS.h	/^struct LS {$/;"	s
+LineSLAM	Drawer.cpp	/^namespace LineSLAM$/;"	n	file:
+LineSLAM	Drawer.h	/^namespace LineSLAM$/;"	n
+LineSLAM	LineSLAMSystem.cpp	/^namespace LineSLAM$/;"	n	file:
+LineSLAM	LineSLAMSystem.h	/^namespace LineSLAM$/;"	n
+LineSLAM	LineTracking.cpp	/^namespace LineSLAM$/;"	n	file:
+LineSLAM	LineTracking.h	/^namespace LineSLAM$/;"	n
+LineSLAM	Viewer.cpp	/^namespace LineSLAM$/;"	n	file:
+LineSLAM	Viewer.h	/^namespace LineSLAM$/;"	n
+LineSLAMSystem	LineSLAMSystem.cpp	/^    LineSLAMSystem::LineSLAMSystem(int LineDetectMethod)$/;"	f	class:LineSLAM::LineSLAMSystem
+LineSLAMSystem	LineSLAMSystem.h	/^class LineSLAMSystem$/;"	c	namespace:LineSLAM
+LineTracking	LineTracking.cpp	/^    LineTracking::LineTracking(int detectMethod,  Drawer *ttFrameDrawer):$/;"	f	class:LineSLAM::LineTracking
+LineTracking	LineTracking.h	/^    class LineTracking$/;"	c	namespace:LineSLAM
+LinesVec	LS.h	/^typedef std::vector<OctaveSingleLine> LinesVec;$/;"	t
+Lines_list	LS.h	/^typedef std::vector<SingleLine> Lines_list;$/;"	t
+LoadImages	LineDetectAndMatch.cpp	/^void LoadImages(const string &strFile, vector<string> &vstrImageFilenames, vector<double> &vTimestamps, const int num)$/;"	f
+MethodForLineDetect	Drawer.h	/^	    int MethodForLineDetect;$/;"	m	class:LineSLAM::Drawer
+OctaveLine	LS.h	/^struct OctaveLine{$/;"	s
+OctaveSingleLine	LS.h	/^struct OctaveSingleLine$/;"	s
+ProcessingImagesNum	LineDetectAndMatch.cpp	/^const int ProcessingImagesNum = 2;$/;"	v
+Run	Viewer.cpp	/^    void Viewer::Run()$/;"	f	class:LineSLAM::Viewer
+ScaleLines	LS.h	/^typedef std::vector<LinesVec> ScaleLines;\/\/each element in ScaleLines is a vector of lines which corresponds the same line detected in different octave images.$/;"	t
+SingleLine	LS.h	/^struct SingleLine$/;"	s
+Start	Timer.h	/^  void Start(){$/;"	f	class:Timer
+Stop	Timer.h	/^  void Stop(){$/;"	f	class:Timer
+SyDrawer	LineSLAMSystem.h	/^	Drawer* SyDrawer;$/;"	m	class:LineSLAM::LineSLAMSystem
+SyLineTracker	LineSLAMSystem.h	/^	LineTracking* SyLineTracker;$/;"	m	class:LineSLAM::LineSLAMSystem
+SyViewer	LineSLAMSystem.h	/^	Viewer* SyViewer;$/;"	m	class:LineSLAM::LineSLAMSystem
+Timer	Timer.h	/^  Timer(){} \/\/end-TimerClass$/;"	f	class:Timer
+Timer	Timer.h	/^class Timer {$/;"	c
+Tracking	LineTracking.cpp	/^    int LineTracking::Tracking(const cv::Mat &im, const double &timestamp)$/;"	f	class:LineSLAM::LineTracking
+Viewer	Viewer.cpp	/^    Viewer::Viewer(int i, Drawer *vFrameDrawer):$/;"	f	class:LineSLAM::Viewer
+Viewer	Viewer.h	/^    class Viewer$/;"	c	namespace:LineSLAM
+_DRAWER_H_	Drawer.h	2;"	d
+_LINESLAMSYSTEM_H_	LineSLAMSystem.h	2;"	d
+_LINETRACKING_H_	LineTracking.h	2;"	d
+_LS_H_	LS.h	2;"	d
+_TIMER_H_	Timer.h	2;"	d
+_VIEWER_H_	Viewer.h	2;"	d
+currentDescrib	LineTracking.h	/^	    cv::Mat currentDescrib;$/;"	m	class:LineSLAM::LineTracking
+currentImg	LineTracking.h	/^	    cv::Mat currentImg;$/;"	m	class:LineSLAM::LineTracking
+currentLineNum	LineTracking.h	/^	    int currentLineNum;$/;"	m	class:LineSLAM::LineTracking
+currentLines	LineTracking.h	/^	    LS *currentLines;$/;"	m	class:LineSLAM::LineTracking
+darkSideGrayValue	LS.h	/^	double darkSideGrayValue;$/;"	m	struct:SingleLine
+descriptor	LS.h	/^	std::vector<double> descriptor;$/;"	m	struct:SingleLine
+descriptor	LS.h	/^	std::vector<float> descriptor;$/;"	m	struct:OctaveSingleLine
+detectEDL	LineTracking.cpp	/^    void LineTracking::detectEDL(const cv::Mat& im)$/;"	f	class:LineSLAM::LineTracking
+detectLSD	LineTracking.cpp	/^    void LineTracking::detectLSD(const cv::Mat &im)$/;"	f	class:LineSLAM::LineTracking
+direction	LS.h	/^	double direction;$/;"	m	struct:SingleLine
+direction	LS.h	/^	float direction;$/;"	m	struct:OctaveSingleLine
+dlines	Drawer.h	/^	    std::vector<cv::line_descriptor::KeyLine> dlines; $/;"	m	class:LineSLAM::Drawer
+drawLine	Drawer.h	/^	    std::vector<LS> drawLine;$/;"	m	class:LineSLAM::Drawer
+drawMat	Drawer.h	/^	    cv::Mat drawMat;$/;"	m	class:LineSLAM::Drawer
+ePointInOctaveX	LS.h	/^	float ePointInOctaveX;$/;"	m	struct:OctaveSingleLine
+ePointInOctaveY	LS.h	/^	float ePointInOctaveY;$/;"	m	struct:OctaveSingleLine
+end	Timer.h	/^  struct timeval start, end;$/;"	m	class:Timer	typeref:struct:Timer::
+endPointX	LS.h	/^	double endPointX;$/;"	m	struct:SingleLine
+endPointX	LS.h	/^	float endPointX;$/;"	m	struct:OctaveSingleLine
+endPointY	LS.h	/^	double endPointY;$/;"	m	struct:SingleLine
+endPointY	LS.h	/^	float endPointY;$/;"	m	struct:OctaveSingleLine
+ex	LS.h	/^    double sx, sy, ex, ey; \/\/ Start & end coordinates of the line segment$/;"	m	struct:LS
+ey	LS.h	/^    double sx, sy, ex, ey; \/\/ Start & end coordinates of the line segment$/;"	m	struct:LS
+gradientMagnitude	LS.h	/^	double gradientMagnitude;$/;"	m	struct:SingleLine
+im	Viewer.h	/^	cv::Mat im;$/;"	m	class:LineSLAM::Viewer
+lastDescrib	LineTracking.h	/^	    cv::Mat lastDescrib;$/;"	m	class:LineSLAM::LineTracking
+lastImg	LineTracking.h	/^	    cv::Mat lastImg;$/;"	m	class:LineSLAM::LineTracking
+lastLineNum	LineTracking.h	/^	    int lastLineNum;$/;"	m	class:LineSLAM::LineTracking
+lastLines	LineTracking.h	/^	    LS *lastLines;$/;"	m	class:LineSLAM::LineTracking
+lastlines	LineTracking.h	/^	    std::vector<cv::line_descriptor::KeyLine> lastlines;$/;"	m	class:LineSLAM::LineTracking
+lightSideGrayValue	LS.h	/^	double lightSideGrayValue;$/;"	m	struct:SingleLine
+lineIDInOctave	LS.h	/^    unsigned int lineIDInOctave;\/\/the line ID in that octave image$/;"	m	struct:OctaveLine
+lineIDInScaleLineVec	LS.h	/^    unsigned int lineIDInScaleLineVec;\/\/the line ID in Scale line vector$/;"	m	struct:OctaveLine
+lineLength	LS.h	/^	double lineLength;$/;"	m	struct:SingleLine
+lineLength	LS.h	/^	float lineLength;$/;"	m	struct:OctaveSingleLine
+lineLength	LS.h	/^    float lineLength; \/\/the length of line in original image scale$/;"	m	struct:OctaveLine
+linePointX	LS.h	/^	double linePointX;\/\/ = rho * cos(theta);$/;"	m	struct:SingleLine
+linePointY	LS.h	/^	double linePointY;\/\/ = rho * sin(theta);$/;"	m	struct:SingleLine
+lines	LineTracking.h	/^	    std::vector<cv::line_descriptor::KeyLine> lines;$/;"	m	class:LineSLAM::LineTracking
+mMutex	Drawer.h	/^	    std::mutex mMutex;$/;"	m	class:LineSLAM::Drawer
+main	LineDetectAndMatch.cpp	/^int main(int argc, char **argv)$/;"	f
+matchingLine	LineTracking.cpp	/^    void LineTracking::matchingLine() $/;"	f	class:LineSLAM::LineTracking
+methods	LineTracking.h	/^	    int methods;\/\/which methods do we use to detect line.$/;"	m	class:LineSLAM::LineTracking
+mptViewer	LineSLAMSystem.h	/^	std::thread* mptViewer;$/;"	m	class:LineSLAM::LineSLAMSystem
+numOfPixels	LS.h	/^	int numOfPixels;$/;"	m	struct:SingleLine
+numOfPixels	LS.h	/^	unsigned int numOfPixels;$/;"	m	struct:OctaveSingleLine
+octaveCount	LS.h	/^	unsigned int octaveCount;$/;"	m	struct:OctaveSingleLine
+octaveCount	LS.h	/^    unsigned int octaveCount;\/\/the octave which this line is detected$/;"	m	struct:OctaveLine
+rho	LS.h	/^	double rho;\/\/unit: pixel length$/;"	m	struct:SingleLine
+sPointInOctaveX	LS.h	/^	float sPointInOctaveX;$/;"	m	struct:OctaveSingleLine
+sPointInOctaveY	LS.h	/^	float sPointInOctaveY;$/;"	m	struct:OctaveSingleLine
+salience	LS.h	/^	float salience;$/;"	m	struct:OctaveSingleLine
+start	Timer.h	/^  struct timeval start, end;$/;"	m	class:Timer	typeref:struct:Timer::timeval
+startPointX	LS.h	/^	double startPointX;$/;"	m	struct:SingleLine
+startPointX	LS.h	/^	float startPointX;$/;"	m	struct:OctaveSingleLine
+startPointY	LS.h	/^	double startPointY;$/;"	m	struct:SingleLine
+startPointY	LS.h	/^	float startPointY;$/;"	m	struct:OctaveSingleLine
+sx	LS.h	/^    double sx, sy, ex, ey; \/\/ Start & end coordinates of the line segment$/;"	m	struct:LS
+sy	LS.h	/^    double sx, sy, ex, ey; \/\/ Start & end coordinates of the line segment$/;"	m	struct:LS
+tCurrentLine	Drawer.h	/^	    LS *tCurrentLine;$/;"	m	class:LineSLAM::Drawer
+tFrameDrawer	LineTracking.h	/^	    Drawer* tFrameDrawer;$/;"	m	class:LineSLAM::LineTracking
+theta	LS.h	/^	double theta;\/\/unit: rad$/;"	m	struct:SingleLine
+tlineNum	Drawer.h	/^	    int tlineNum;$/;"	m	class:LineSLAM::Drawer
+updateDrawer	Drawer.cpp	/^    void Drawer::updateDrawer(LineTracking *tLineTracking)$/;"	f	class:LineSLAM::Drawer
+vDrawer	Viewer.h	/^	    Drawer* vDrawer;$/;"	m	class:LineSLAM::Viewer
+width	LS.h	/^	double width;$/;"	m	struct:SingleLine

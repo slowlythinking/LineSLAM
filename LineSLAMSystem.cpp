@@ -9,11 +9,11 @@ using namespace std;
 namespace LineSLAM
 {
 
-    LineSLAMSystem::LineSLAMSystem(int i)
+    LineSLAMSystem::LineSLAMSystem(int LineDetectMethod)
 
     {
 	SyDrawer = new Drawer(1);
-	SyLineTracker = new LineTracking(1,SyDrawer);
+	SyLineTracker = new LineTracking(LineDetectMethod,SyDrawer);
 	SyViewer = new Viewer(1,SyDrawer);
 	mptViewer = new thread(&Viewer::Run, SyViewer); 
     }
@@ -22,13 +22,13 @@ namespace LineSLAM
     int LineSLAMSystem::InputImageLSD(const cv::Mat &im, const double &timestamp)
     {
 
-	return SyLineTracker->Tracking(im, timestamp, 0);
+	return SyLineTracker->Tracking(im, timestamp);
 
     }
 
     int LineSLAMSystem::InputImageEDL(const cv:: Mat &im, const double &timestamp)
     {
-	return SyLineTracker->Tracking(im, timestamp, 1);
+	return SyLineTracker->Tracking(im, timestamp);
     }
 
 //    void LineSLAMSystem::InputImageEDL(string file)

@@ -25,18 +25,35 @@ namespace LineSLAM
 	private:
 
 	public:
+	    LineTracking(int detectMethod, Drawer *ttFrameDrawer);
+
+	    //for all methods
 	    int methods;//which methods do we use to detect line.
 	    cv::Mat currentImg;
-	    LS *currentLines;
+	    cv::Mat lastImg;
+
+	    cv::Mat currentDescrib;
+	    cv::Mat lastDescrib;
+
 	    int currentLineNum;
+	    int lastLineNum;
+	    
+	    //for EDLine method
+	    LS *currentLines;
+	    LS *lastLines;
 
+	    //for LSD method
 	    std::vector<cv::line_descriptor::KeyLine> lines;
+	    std::vector<cv::line_descriptor::KeyLine> lastlines;
 
-	    LineTracking(int i, Drawer *ttFrameDrawer);
+	    //detect line segements
+	    void detectLSD(const cv::Mat &im);
+	    void detectEDL(const cv::Mat &im);
 
-	    void TrackInputImageLSD(const cv::Mat &im);
-	    void TrackInputImageEDL(const cv::Mat &im);
-	    int Tracking(const cv::Mat &im, const double &timestamp, int detectMethod);
+	    //matching line segements
+	    void matchingLine(); 
+
+	    int Tracking(const cv::Mat &im, const double &timestamp);
 	protected:
 	    Drawer* tFrameDrawer;
 

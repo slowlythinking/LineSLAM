@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     int ImageNumInTrue;
     ProcessingImagesNum >= nImages ? ImageNumInTrue = nImages : ImageNumInTrue = ProcessingImagesNum;
 
-    LineSLAM::LineSLAMSystem SLAM(1);
+    LineSLAM::LineSLAMSystem SLAM(LineDetectMethod);
 
     // Vector for tracking time statistics
     vector<double> vTimesTrack;
@@ -83,10 +83,10 @@ int main(int argc, char **argv)
 
 	// Pass the image to the SLAM system
 	cout << "now I'm pretended to process the " << ni << "th image:)" << endl;
-	if(LineDetectMethod == 0)
+        if(LineDetectMethod == 0 || LineDetectMethod == 1)
 	    vLinesNum[ni] = SLAM.InputImageLSD(im,tframe);
-	else if(LineDetectMethod == 1)
-	    vLinesNum[ni] = SLAM.InputImageEDL(im,tframe);
+	//else if(LineDetectMethod == 1)
+	//vLinesNum[ni] = SLAM.InputImageEDL(im,tframe);
 	else
 	{
 	    cout << "please choose a method to detect line!" << endl;

@@ -17,7 +17,7 @@ namespace LineSLAM
 class LineSLAMSystem
 {
     public:
-	LineSLAMSystem(int i);
+	LineSLAMSystem(int LineDetectMethod);
 
 	int InputImageLSD(const cv::Mat &im, const double &timestamp);
 	int InputImageEDL(const cv::Mat &im, const double &timestamp);
