@@ -8,14 +8,19 @@
 #include <opencv2/features2d.hpp>
 #include <opencv2/highgui.hpp>
 #include <thread>
+#include <cmath>
 #include <iostream>
 #include "Timer.h"
 #include "Drawer.h"
-#include "LS.h"
+#include "Map.h"
+#include "MapDrawer.h"
+//#include "LS.h"
+#include "Initializer.h"
+#include "Frame.h"
+#include "InitializationAnalysis.h"
 
-#define MATCHES_DIST_THRESHOLD 25
+#define MATCHES_DIST_THRESHOLD 20
 
-LS *DetectLinesByED(unsigned char *srcImg, int width, int height, int *pNoLines);
 
 namespace LineSLAM
 {
@@ -26,42 +31,68 @@ namespace LineSLAM
 	private:
 
 	public:
-	    LineTracking(int detectMethod, Drawer *ttFrameDrawer);
+	    LineTracking(int detectMethod, Drawer *ttFrameDrawer, Map *pMap, MapDrawer *pMapDrawer, string strSettingPath);
+
+	    //Calibration matrix
+	    cv::Mat mK;
+	    cv::Mat mDistCoef;
+
+	    //state
+	    enum eTrackingState{
+		SYSTEM_NOT_READY=-1,
+		NO_IMAGES_YET=-2,
+		NOT_INITIALIZED=-3,
+		INITIALIZED=-4,
+		OK=-5,
+		LOST=-6
+	    };
+	    int mState = NO_IMAGES_YET;
+
+	    //for initialization
+	    vector<bool> vbTriangulated; // Triangulated Correspondences (mvIniMatches)
+	    vector<cv::KeyPoint> mvKeys1; ///< 存储Reference Frame中的特征点
+	    vector<cv::KeyPoint> mvKeys2; ///< 存储Current Frame中的特征点
+	    vector<cv::Point3f> mvIniP3D;
+	    vector<int> mvIniMatches;// 跟踪初始化时前两帧之间的匹配
+	    int mLastProcessedState = NO_IMAGES_YET;
+	    bool isRefFrame = true;
+	    Frame mInitialFrame;
+	    Frame mLastFrame;
+	    Initializer* mpInitializer;
+	    InitializationAnalysis* IniAnalysis;
+	    std::vector<cv::DMatch> matches;
+	    std::vector<cv::DMatch> good_matches;
 
 	    //for all methods
+	    Frame mCurrentFrame;
+	    Frame lastFrame;
 	    int methods;//which methods do we use to detect line.
 	    cv::Mat currentImg;
 	    cv::Mat lastImg;
-
-	    cv::Mat currentDescrib;
-	    cv::Mat goodcurrentDescrib;
-	    cv::Mat lastDescrib;
-
-	    std::vector<cv::DMatch> good_matches;
 
 	    int frameNum;
 	    int currentLineNum;
 	    int lastLineNum;
 	    
 	    //for EDLine method
-	    LS *currentLines;
-	    LS *lastLines;
-
-	    //for LSD method
-	    std::vector<cv::line_descriptor::KeyLine> lines;
-	    std::vector<cv::line_descriptor::KeyLine> goodlines;
-	    std::vector<cv::line_descriptor::KeyLine> lastlines;
-
-	    //detect line segements
-	    void detectLSD(const cv::Mat &im);
-	    void detectEDL(const cv::Mat &im);
+//	    LS *currentLines;
+//	    LS *lastLines;
 
 	    //matching line segements
 	    void matchingLine(); 
 
-	    int Tracking(const cv::Mat &im, const double &timestamp);
+	    //Initialization
+	    void monoInitialization();
+
+	    //add initial point line and frame into map
+	    void CreateInitialMap();
+
+	    int Tracking(const cv::Mat &im, const double &timestamp, int &LineNum);
 	protected:
 	    Drawer* tFrameDrawer;
+	    Map* mpMap;
+	    MapDrawer* mpMapDrawer;
+	    std::thread* InitialAyalyThread;
 
     };
 

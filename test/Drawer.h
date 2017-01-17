@@ -2,7 +2,8 @@
 #define _DRAWER_H_
 
 #include "LineTracking.h"
-#include "LS.h"
+//#include "LS.h"
+#include "Frame.h"
 #include <mutex>
 
 namespace LineSLAM
@@ -21,15 +22,16 @@ class LineTracking;//如果没有这个，会报错not name the type
 	    cv::Mat drawMat;
 	    cv::Mat currentImg;
 	    cv::Mat lastImg;
-	    LS *tCurrentLine;
+//	    LS *tCurrentLine;
 	    int tlineNum;
 	    int frameNum;
-	    std::vector<LS> drawLine;
+//	    std::vector<LS> drawLine;
 	    int MethodForLineDetect;
-	    std::vector<cv::line_descriptor::KeyLine> dlines; 
-	    std::vector<cv::line_descriptor::KeyLine> lastlines; 
+	    Frame mCurrentFrame;
+	    Frame initialFrame;
 	    std::vector<cv::DMatch> good_matches;
 	    std::mutex mMutex;
+	    int mState;
     };
 
 }

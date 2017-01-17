@@ -23,47 +23,69 @@ namespace LineSLAM
 	unique_lock<mutex> lock(mMutex);
 
 	//use EDLine
-	if(MethodForLineDetect == 1)
-	{
-	    for (int i=0; i<tlineNum; i++)
+//	if(MethodForLineDetect == 1)
+//	{
+//	    for (int i=0; i<tlineNum; i++)
+//	    {
+//		Point pt1 = Point2f(tCurrentLine[i].sx, tCurrentLine[i].sy);
+//		Point pt2 = Point2f(tCurrentLine[i].ex, tCurrentLine[i].ey);
+//		/* draw line */
+//		//	line( output, pt1, pt2, Scalar( B, G, R ), 3 );
+//		cv::line( drawMat, pt1, pt2, Scalar( 255, 0, 0 ), 1 );
+//		//	cout << "what's the problem!" << endl;
+//	    } //end-for
+//	}
+//
+//	//use LSD 
+//	else if(MethodForLineDetect == 0)
+//	{
+//	    if(frameNum < 2)
+//	    {
+//		for ( int i = 0; i < tlineNum; i++)
+//		{
+//		    KeyLine kl = dlines[i];
+//		    /* get extremes of line */
+//		    Point pt1 = Point2f( kl.startPointX, kl.startPointY );
+//		    Point pt2 = Point2f( kl.endPointX, kl.endPointY );
+//
+//		    /* draw line */
+//		    //	line( output, pt1, pt2, Scalar( B, G, R ), 3 );
+//		    cv::line( drawMat, pt1, pt2, Scalar( 255, 0, 0 ), 1 );
+//
+//		}
+//	    }
+//	    else
+//	    {
+//		drawMat.release();
+//		vector<char> mask(good_matches.size(), 1 );
+//		drawLineMatches( currentImg, dlines, lastImg, lastlines, good_matches, drawMat, Scalar::all( -1 ), Scalar::all( -1 ), mask, DrawLinesMatchesFlags::DEFAULT );
+//	    }
+	    for ( int i = 0; i < mCurrentFrame.goodlines.size(); i++)
 	    {
-		Point pt1 = Point2f(tCurrentLine[i].sx, tCurrentLine[i].sy);
-		Point pt2 = Point2f(tCurrentLine[i].ex, tCurrentLine[i].ey);
+		KeyLine kl = mCurrentFrame.goodlines[i];
+		/* get extremes of line */
+		Point pt1 = Point2f( kl.startPointX, kl.startPointY );
+		Point pt2 = Point2f( kl.endPointX, kl.endPointY );
+
 		/* draw line */
 		//	line( output, pt1, pt2, Scalar( B, G, R ), 3 );
-		cv::line( drawMat, pt1, pt2, Scalar( 255, 0, 0 ), 1 );
-		//	cout << "what's the problem!" << endl;
-	    } //end-for
-	}
-
-	//use LSD 
-	else if(MethodForLineDetect == 0)
-	{
-	    if(frameNum < 2)
-	    {
-		for ( int i = 0; i < tlineNum; i++)
-		{
-		    KeyLine kl = dlines[i];
-		    /* get extremes of line */
-		    Point pt1 = Point2f( kl.startPointX, kl.startPointY );
-		    Point pt2 = Point2f( kl.endPointX, kl.endPointY );
-
-		    /* draw line */
-		    //	line( output, pt1, pt2, Scalar( B, G, R ), 3 );
-		    cv::line( drawMat, pt1, pt2, Scalar( 255, 0, 0 ), 1 );
-
-		}
+		cv::line( drawMat, pt1, pt2, Scalar( 250, 0, 0 ), 1 );
 	    }
-	    else
+	    for(int i = 0; i<good_matches.size(); i++)
 	    {
-		drawMat.release();
-		vector<char> mask(good_matches.size(), 1 );
-		drawLineMatches( currentImg, dlines, lastImg, lastlines, good_matches, drawMat, Scalar::all( -1 ), Scalar::all( -1 ), mask, DrawLinesMatchesFlags::DEFAULT );
+		KeyLine kl1 = initialFrame.goodlines[good_matches[i].queryIdx];
+		KeyLine kl2 = mCurrentFrame.goodlines[good_matches[i].trainIdx];
+		Point pt1s = Point2f(kl1.startPointX, kl1.startPointY);
+		Point pt1e = Point2f(kl1.endPointX, kl1.endPointY);
+		Point pt2s = Point2f(kl2.startPointX, kl2.startPointY);
+		Point pt2e = Point2f(kl2.endPointX, kl2.endPointY);
+		cv::line(drawMat, pt1s, pt2s, Scalar( 0, 250, 0 ), 1);
+		cv::line(drawMat, pt1e, pt2e, Scalar( 0, 250, 0 ), 1);
 	    }
 
-	}
-	else
-	    cout << "don't choose right line detector!" << endl;
+//	}
+//	else
+//	    cout << "don't choose right line detector!" << endl;
 	return drawMat;
     }
 
@@ -71,30 +93,32 @@ namespace LineSLAM
     {
 	unique_lock<mutex> lock(mMutex);
 
-	MethodForLineDetect = tLineTracking->methods;
-	int tLineNum = tLineTracking->currentLineNum;
-	cout << "更新Drawer！！！！！！！！！线段数目为：" << tLineNum << endl;
-	if(tLineNum > 0)
+	if(tLineTracking->mState == LineTracking::NOT_INITIALIZED)
 	{
-	    if(MethodForLineDetect == 1)
+	    cout << "开始更新draw" << endl;
+	    MethodForLineDetect = tLineTracking->methods;
+	    mCurrentFrame = tLineTracking->mCurrentFrame;
+	    initialFrame = tLineTracking->mInitialFrame;
+	    if(mCurrentFrame.goodlines.size() > 0)
 	    {
-		drawMat = tLineTracking->currentImg;
-		tlineNum = tLineTracking->currentLineNum;
-		tCurrentLine = tLineTracking->currentLines;
+//		if(MethodForLineDetect == 1)
+//		{
+//		    drawMat = tLineTracking->currentImg;
+//		    tlineNum = tLineTracking->currentLineNum;
+//		    tCurrentLine = tLineTracking->currentLines;
+//		}
+//		else if(MethodForLineDetect == 0)
+//		{
+//		    drawMat = tLineTracking->currentImg;
+		    drawMat = mCurrentFrame.img;
+		    currentImg = drawMat;
+		    int tLineNum = mCurrentFrame.goodlines.size();
+		    good_matches = tLineTracking->good_matches;
+		    cout << "更新Drawer！！！！！！！！！线段数目为：" << tLineNum << endl;
+//		}
+//		else
+//		    cout << "don't choose right line detector!" << endl;
 	    }
-	    else if(MethodForLineDetect == 0)
-	    {
-		drawMat = tLineTracking->currentImg;
-		currentImg = drawMat;
-		tlineNum = tLineTracking->currentLineNum;
-		dlines = tLineTracking->goodlines;
-		lastImg = tLineTracking->lastImg;
-		lastlines = tLineTracking->lastlines;
-		frameNum = tLineTracking->frameNum;
-		good_matches = tLineTracking->good_matches;
-	    }
-	    else
-		cout << "don't choose right line detector!" << endl;
 	}
     }
 }

@@ -9,21 +9,34 @@ using namespace std;
 namespace LineSLAM
 {
 
-    LineSLAMSystem::LineSLAMSystem(int LineDetectMethod)
+    LineSLAMSystem::LineSLAMSystem(int LineDetectMethod, string settingPath)
 
     {
+	linenum = 0;
+
+
+	mpMap = new Map();
 	SyDrawer = new Drawer(1);
-	SyLineTracker = new LineTracking(LineDetectMethod,SyDrawer);
-	SyViewer = new Viewer(1,SyDrawer);
+	mpMapDrawer = new MapDrawer(mpMap, settingPath);
+	SyLineTracker = new LineTracking(LineDetectMethod,SyDrawer, mpMap, mpMapDrawer, settingPath);
+	SyViewer = new Viewer(1, settingPath, SyDrawer, mpMapDrawer);
 	mptViewer = new thread(&Viewer::Run, SyViewer); 
     }
 
 
-    int LineSLAMSystem::InputImage(const cv::Mat &im, const double &timestamp)
+    int LineSLAMSystem::InputImage(const cv::Mat &im, const double &timestamp, int &stateInitial)
     {
 
-	return SyLineTracker->Tracking(im, timestamp);
+	SyState = SyLineTracker->Tracking(im, timestamp, linenum);
+	stateInitial = SyState;
+	return linenum;
 
+    }
+
+    int LineSLAMSystem::getSystemState()
+    {
+	unique_lock<mutex> lock(mSysState);
+	return SyState;
     }
 
 
